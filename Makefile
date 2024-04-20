@@ -1,8 +1,8 @@
 # A makefile for Docker commands
 
 # variables
-IMAGE_NAME := anamoly-image
-CONTAINER_NAME := anamoly-container
+IMAGE_NAME := anomaly-image
+CONTAINER_NAME := anomaly-container
 DATA_PATH := $(shell pwd)/data
 NOTEBOOKS_PATH := $(shell pwd)/notebooks
 PORT := 8888
