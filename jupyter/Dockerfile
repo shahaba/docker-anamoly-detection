@@ -8,5 +8,7 @@ RUN pip install jupyter
 
 EXPOSE 8888
 
+VOLUME ["data", "notebooks"]
+
 CMD jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --port=8888
 
