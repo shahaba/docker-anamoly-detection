@@ -1,0 +1,20 @@
+{
+    auto_https off  # Disables automatic HTTPS for local testing
+}
+
+:9090 {
+    basicauth /* {
+        admin $2a$14$lrzmhDmu0yC/tPPOA/Zlsufi/jzTFwxdPrUt0YGi.31/hrddNNA42
+    }
+    reverse_proxy prometheus:9090
+    log {
+        output stderr
+    }
+}
+
+:3000 {
+    reverse_proxy grafana:3000
+    log {
+        output stderr
+    }
+}
