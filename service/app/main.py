@@ -15,10 +15,13 @@ async def root():
 async def predict(feature_vector: List[float], score: bool = False):
     response = {
         "is_inliner": int(model.predict([feature_vector])[0]),
-        "anomaly_score": float(model.predict([feature_vector])),
     }
 
-    return response if score else response["is_inliner"]
+    if score:
+        val = model.score_samples([feature_vector])
+        response["anomaly_score"] = val[0]
+
+    return response
 
 
 @app.get("/model_information")
