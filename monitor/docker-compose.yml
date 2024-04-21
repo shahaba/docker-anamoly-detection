@@ -1,0 +1,51 @@
+version: "3"
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+services:
+  prometheus:
+    image: prom/prometheus:v2.20.0
+    container_name: prometheus
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=prometheus_data/"
+      - "--storage.tsdb.retention.time=15d"
+    restart: unless-stopped
+    expose:
+      - "9090"
+
+  grafana:
+    image: grafana/grafana:7.1.1
+    container_name: grafana
+    volumes:
+      - ./grafana:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    depends_on:
+      - prometheus
+
+  caddy:
+    image: caddy
+    container_name: caddy
+    restart: unless-stopped
+    volumes:
+      - ./caddy:/etc/caddy
+    environment:
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+    ports:
+      - "3000:3000"
+      - "9090:9090"
+    depends_on:
+      - prometheus
+      - grafana
